@@ -1,9 +1,3 @@
-variable "project_name" {
-  type        = string 
-  description = "Project's name"
-  default     = "stoussaint"
-}
-
 resource "azurerm_resource_group" "app01" {
   name     = "rg-${var.project_name}-${var.environnement}-01"
   location = "West Europe"
