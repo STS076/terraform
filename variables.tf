@@ -12,3 +12,7 @@ variable "environnement" {
   type = string
   description = "Target env"
 }
+
+variable "must_be_created" {
+  type = bool
+}

@@ -1,11 +1,12 @@
 resource "azurerm_resource_group" "app01" {
   name     = "rg-${var.project_name}-${var.environnement}-01"
   location = "West Europe"
+
   tags = local.tags
 }
 
 module "webapp" {
-  count = 3
+  count = var.must_be_created ? 1 : 0
   source = "./modules/webapp_linux"
   resource_group_name = azurerm_resource_group.app01.name
   location = azurerm_resource_group.app01.location
