@@ -108,3 +108,24 @@ resource "azurerm_key_vault_secret" "app_db_connectionstring" {
   value        = "Server=tcp:${azurerm_mssql_server.sql01.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_mssql_database.db01.name};Persist Security Info=False;User ID=${azurerm_mssql_server.sql01.administrator_login};Password=${azurerm_mssql_server.sql01.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   key_vault_id = azurerm_key_vault.kv01.id
 }
+
+resource "azurerm_kubernetes_cluster" "example" {
+  name                = "aks-${var.project_name}-"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  dns_prefix          = "ask-${var.project_name}"
+
+  default_node_pool {
+    name       = "default"
+    node_count = 1
+    vm_size    = "Standard_D2_v2"
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  tags = {
+    Environment = "Production"
+  }
+}
