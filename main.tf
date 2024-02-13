@@ -109,7 +109,7 @@ resource "azurerm_key_vault_secret" "app_db_connectionstring" {
   key_vault_id = azurerm_key_vault.kv01.id
 }
 
-resource "azurerm_kubernetes_cluster" "example" {
+resource "azurerm_kubernetes_cluster" "kb-stoussaint01" {
   name                = "aks-${var.project_name}-"
   location            = azurerm_resource_group.app01.location
   resource_group_name = azurerm_resource_group.app01.name
@@ -128,4 +128,15 @@ resource "azurerm_kubernetes_cluster" "example" {
   tags = {
     Environment = "Production"
   }
+}
+
+output "client_certificate" {
+  value     = azurerm_kubernetes_cluster.app01.kube_config.0.client_certificate
+  sensitive = true
+}
+
+output "kube_config" {
+  value = azurerm_kubernetes_cluster.app01.kube_config_raw
+
+  sensitive = true
 }
