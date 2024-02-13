@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "app01" {
-  name     = "rg-${var.project_name}-${var.environnement}-01"
+  name     = "MC_rg-${var.project_name}-${var.environnement}-01"
   location = "West Europe"
 
   tags = local.tags
