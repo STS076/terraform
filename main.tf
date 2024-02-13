@@ -111,8 +111,8 @@ resource "azurerm_key_vault_secret" "app_db_connectionstring" {
 
 resource "azurerm_kubernetes_cluster" "example" {
   name                = "aks-${var.project_name}-"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.app01.location
+  resource_group_name = azurerm_resource_group.app01.name
   dns_prefix          = "ask-${var.project_name}"
 
   default_node_pool {
