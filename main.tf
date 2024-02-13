@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "appCube01" {
-  name     = "rg-${var.project_name}-${var.environment}-01"
+  name     = "rg-${var.project_name}-${var.environment}-cube01"
   location = "West Europe"
 
   tags = local.tags
