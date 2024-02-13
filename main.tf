@@ -125,9 +125,7 @@ resource "azurerm_kubernetes_cluster" "kb-stoussaint01" {
     type = "SystemAssigned"
   }
 
-  tags = {
-    Environment = "Production"
-  }
+  tags = local.tags
 }
 
 output "client_certificate" {
