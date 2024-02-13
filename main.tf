@@ -142,7 +142,7 @@ output "kube_config" {
 
 
 resource "azurerm_public_ip" "ip-stoussaint01" {
-  name                = "PublicIPForLB"
+  name                = "lb-{var.project_name}"
   location            = azurerm_resource_group.app01.location
   resource_group_name = azurerm_resource_group.app01.name
   allocation_method   = "Static"
@@ -155,6 +155,6 @@ resource "azurerm_lb" "lb-stoussaint01" {
 
   frontend_ip_configuration {
     name                 = "ip-{var.project_name}"
-    public_ip_address_id = azurerm_public_ip.app01.id
+    public_ip_address_id = azurerm_public_ip.ip-stoussaint01.id
   }
 }
