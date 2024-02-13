@@ -8,7 +8,7 @@ variable "project_owner" {
   description = "Project's owner"
 }
 
-variable "environnement" {
+variable "environment" {
   type = string
   description = "Target env"
 }

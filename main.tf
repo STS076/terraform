@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "appCube01" {
-  name     = "MC_rg-${var.project_name}-${var.environnement}-01"
+  name     = "MC_rg-${var.project_name}-${var.environment}-01"
   location = "West Europe"
 
   tags = local.tags
@@ -10,8 +10,8 @@ module "webapp" {
   source = "./modules/webapp_linux"
   resource_group_name = azurerm_resource_group.appCube01.name
   location = azurerm_resource_group.appCube01.location
-  webapp_name = "app-${var.project_name}-${var.environnement}-${count.index}"
-  asp_name = "asp-${var.project_name}-${var.environnement}-${count.index}"
+  webapp_name = "app-${var.project_name}-${var.environment}-${count.index}"
+  asp_name = "asp-${var.project_name}-${var.environment}-${count.index}"
   sku_name = "P1v2"
   keyvault_id = azurerm_key_vault.kv01.id
   app_settings = {
@@ -22,7 +22,7 @@ module "webapp" {
 }
 
 resource "azurerm_log_analytics_workspace" "loganalystics01" {
-  name                = "logs-${var.project_name}-${var.environnement}-01"
+  name                = "logs-${var.project_name}-${var.environment}-01"
   location            = azurerm_resource_group.appCube01.location
   resource_group_name = azurerm_resource_group.appCube01.name
   sku                 = "PerGB2018"
@@ -32,7 +32,7 @@ resource "azurerm_log_analytics_workspace" "loganalystics01" {
 }
 
 resource "azurerm_application_insights" "insights01" {
-  name                = "insights-${var.project_name}-${var.environnement}-01"
+  name                = "insights-${var.project_name}-${var.environment}-01"
   location            = azurerm_log_analytics_workspace.loganalystics01.location
   resource_group_name = azurerm_log_analytics_workspace.loganalystics01.resource_group_name
   workspace_id        = azurerm_log_analytics_workspace.loganalystics01.id
@@ -42,7 +42,7 @@ resource "azurerm_application_insights" "insights01" {
 }
 
 resource "azurerm_key_vault" "kv01" {
-  name                        = "kv-${var.project_name}-${var.environnement}-01"
+  name                        = "kv-${var.project_name}-${var.environment}-01"
   location                    = azurerm_resource_group.appCube01.location
   resource_group_name         = azurerm_resource_group.appCube01.name
   tenant_id                   = data.azurerm_client_config.current.tenant_id
@@ -77,7 +77,7 @@ resource "azurerm_key_vault_secret" "sql_password" {
 }
 
 resource "azurerm_mssql_server" "sql01" {
-  name                         = "sqlsrev-${var.project_name}-${var.environnement}-01"
+  name                         = "sqlsrev-${var.project_name}-${var.environment}-01"
   resource_group_name          = azurerm_resource_group.appCube01.name
   location                     = azurerm_resource_group.appCube01.location
   version                      = "12.0"
@@ -88,7 +88,7 @@ resource "azurerm_mssql_server" "sql01" {
 }
 
 resource "azurerm_mssql_database" "db01" {
-  name           = "db-${var.project_name}-${var.environnement}-01"
+  name           = "db-${var.project_name}-${var.environment}-01"
   server_id      = azurerm_mssql_server.sql01.id
   collation      = "SQL_Latin1_General_CP1_CI_AS"
   license_type   = "LicenseIncluded"
