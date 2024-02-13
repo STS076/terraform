@@ -1,4 +1,4 @@
-resource "azurerm_resource_group" "app01" {
+resource "azurerm_resource_group" "appCube01" {
   name     = "MC_rg-${var.project_name}-${var.environnement}-01"
   location = "West Europe"
 
@@ -8,8 +8,8 @@ resource "azurerm_resource_group" "app01" {
 module "webapp" {
   count = var.must_be_created ? 1 : 0
   source = "./modules/webapp_linux"
-  resource_group_name = azurerm_resource_group.app01.name
-  location = azurerm_resource_group.app01.location
+  resource_group_name = azurerm_resource_group.appCube01.name
+  location = azurerm_resource_group.appCube01.location
   webapp_name = "app-${var.project_name}-${var.environnement}-${count.index}"
   asp_name = "asp-${var.project_name}-${var.environnement}-${count.index}"
   sku_name = "P1v2"
@@ -23,8 +23,8 @@ module "webapp" {
 
 resource "azurerm_log_analytics_workspace" "loganalystics01" {
   name                = "logs-${var.project_name}-${var.environnement}-01"
-  location            = azurerm_resource_group.app01.location
-  resource_group_name = azurerm_resource_group.app01.name
+  location            = azurerm_resource_group.appCube01.location
+  resource_group_name = azurerm_resource_group.appCube01.name
   sku                 = "PerGB2018"
   retention_in_days   = 30
 
@@ -43,8 +43,8 @@ resource "azurerm_application_insights" "insights01" {
 
 resource "azurerm_key_vault" "kv01" {
   name                        = "kv-${var.project_name}-${var.environnement}-01"
-  location                    = azurerm_resource_group.app01.location
-  resource_group_name         = azurerm_resource_group.app01.name
+  location                    = azurerm_resource_group.appCube01.location
+  resource_group_name         = azurerm_resource_group.appCube01.name
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_retention_days  = 7
   purge_protection_enabled    = false
@@ -78,8 +78,8 @@ resource "azurerm_key_vault_secret" "sql_password" {
 
 resource "azurerm_mssql_server" "sql01" {
   name                         = "sqlsrev-${var.project_name}-${var.environnement}-01"
-  resource_group_name          = azurerm_resource_group.app01.name
-  location                     = azurerm_resource_group.app01.location
+  resource_group_name          = azurerm_resource_group.appCube01.name
+  location                     = azurerm_resource_group.appCube01.location
   version                      = "12.0"
   administrator_login          = azurerm_key_vault_secret.sql_login.value
   administrator_login_password = azurerm_key_vault_secret.sql_password.value
@@ -111,8 +111,8 @@ resource "azurerm_key_vault_secret" "app_db_connectionstring" {
 
 resource "azurerm_kubernetes_cluster" "kb-stoussaint01" {
   name                = "aks-${var.project_name}"
-  location            = azurerm_resource_group.app01.location
-  resource_group_name = azurerm_resource_group.app01.name
+  location            = azurerm_resource_group.appCube01.location
+  resource_group_name = azurerm_resource_group.appCube01.name
   dns_prefix          = "ask-${var.project_name}"
 
   default_node_pool {
@@ -143,15 +143,15 @@ output "kube_config" {
 
 resource "azurerm_public_ip" "ip-stoussaint01" {
   name                = "lb-{var.project_name}"
-  location            = azurerm_resource_group.app01.location
-  resource_group_name = azurerm_resource_group.app01.name
+  location            = azurerm_resource_group.appCube01.location
+  resource_group_name = azurerm_resource_group.appCube01.name
   allocation_method   = "Static"
 }
 
 resource "azurerm_lb" "lb-stoussaint01" {
   name                = "lb-{var.project_name}"
-  location            = azurerm_resource_group.app01.location
-  resource_group_name = azurerm_resource_group.app01.name
+  location            = azurerm_resource_group.appCube01.location
+  resource_group_name = azurerm_resource_group.appCube01.name
 
   frontend_ip_configuration {
     name                 = "ip-{var.project_name}"
