@@ -110,7 +110,7 @@ resource "azurerm_key_vault_secret" "app_db_connectionstring" {
 }
 
 resource "azurerm_kubernetes_cluster" "kb-stoussaint01" {
-  name                = "aks-${var.project_name}-"
+  name                = "aks-${var.project_name}"
   location            = azurerm_resource_group.app01.location
   resource_group_name = azurerm_resource_group.app01.name
   dns_prefix          = "ask-${var.project_name}"
@@ -137,4 +137,24 @@ output "kube_config" {
   value = azurerm_kubernetes_cluster.kb-stoussaint01.kube_config_raw
 
   sensitive = true
+}
+
+
+
+resource "azurerm_public_ip" "ip-stoussaint01" {
+  name                = "PublicIPForLB"
+  location            = azurerm_resource_group.app01.location
+  resource_group_name = azurerm_resource_group.app01.name
+  allocation_method   = "Static"
+}
+
+resource "azurerm_lb" "lb-stoussaint01" {
+  name                = "lb-{var.project_name}"
+  location            = azurerm_resource_group.app01.location
+  resource_group_name = azurerm_resource_group.app01.name
+
+  frontend_ip_configuration {
+    name                 = "ip-{var.project_name}"
+    public_ip_address_id = azurerm_public_ip.lb-stoussaint01.id
+  }
 }
